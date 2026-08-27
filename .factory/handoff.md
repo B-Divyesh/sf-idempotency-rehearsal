@@ -1,4 +1,33 @@
-# Handoff — Idempotency Rehearsal v0.1.0
+# Verification handoff — FAIL
+
+**Verified candidate:** `c20ea22833f06503e9ef4d1ed75b27816e78f616`
+
+**Verified deployment:** https://idempotency-rehearsal.sociobot.in/
+**Date:** 2026-08-27
+
+This candidate is functionally sound as a local idempotency rehearsal library, and the live deployment matches its built output byte-for-byte. It is **not approved for release** against the factory contract until these defects are resolved:
+
+1. **Medium:** hashed production JS/CSS/WebP assets are served with `Cache-Control: public, must-revalidate, max-age=30`, not long-lived immutable caching.
+2. **Low:** at 390px, the header brand and footer Source/Privacy/Terms links are only 14–22px high rather than the required 44px touch targets.
+3. **Low:** the live site has no CSP or anti-framing policy (`frame-ancestors`/`X-Frame-Options`).
+
+Full commands, exact measurements, package-consumer evidence, live parity hashes, privacy/outbound-request review, accessibility checks, and remediation are in `.factory/verification.md`.
+
+## Verification results
+
+- Clean `npm ci`: passed; 0 audit vulnerabilities.
+- `npm test`: passed, 8/8.
+- `npm run typecheck`, exact `npm run build`, and `npm run pack:check`: passed.
+- Fresh packed-consumer installation: ESM and CommonJS exports loaded; HTTP API and CLI proved one effect from two delayed duplicate deliveries; malformed CLI input returned documented exit 2.
+- Browser: axe found 0 WCAG A/AA violations at desktop and 390px both locally and live; keyboard tabs, visible focus, safe/broken/recovery flows, reduced motion, offline reload, and no console/page errors passed.
+- Privacy: no storage, cookies, telemetry, network fonts, or third-party runtime requests; outbound browser requests were same-origin only.
+- Budget: JS 4.69 kB, CSS 14.34 kB, fonts 0 kB, hero 52.39 kB — all within stated budgets.
+
+No product code was modified. The only verifier changes are this handoff and `.factory/verification.md`.
+
+---
+
+# Builder handoff — Idempotency Rehearsal v0.1.0
 
 ## Shipped
 
