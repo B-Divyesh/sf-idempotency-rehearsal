@@ -20,6 +20,9 @@
   "engines": {
     "node": ">=20"
   },
+  "overrides": {
+    "esbuild": "^0.28.1"
+  },
   "files": [
     "dist/package",
     "README.md",
@@ -53,7 +56,6 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@types/node": "^24.3.0",
-    "esbuild": "^0.28.2",
     "jsdom": "^26.1.0",
     "playwright": "1.58.2",
     "tsup": "^8.5.0",
