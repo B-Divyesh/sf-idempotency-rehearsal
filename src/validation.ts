@@ -1,6 +1,7 @@
 import type { Delivery, JsonObject, JsonValue, Scenario } from './types.js';
 
 const LIVE_ID = /(?:^|[_-])(live|prod|production)(?:[_-]|$)|^(?:sk|pk|rk)_live_|^whsec_/i;
+const SYNTHETIC_ID = /(?:^|[_-])(test|demo|fixture|example|fake|sandbox|rehearsal|local)(?:[_-]|$)/i;
 const SENSITIVE_FIELD = /^(authorization|cookie|password|secret|signature|token|api[_-]?key)$/i;
 
 function assertString(value: unknown, label: string): asserts value is string {
@@ -29,6 +30,9 @@ function validateDelivery(delivery: Delivery, index: number): void {
   assertString(delivery.idempotencyKey, `deliveries[${index}].idempotencyKey`);
   if (LIVE_ID.test(delivery.eventId) || LIVE_ID.test(delivery.idempotencyKey)) {
     throw new TypeError(`deliveries[${index}] looks like a live identifier; use a synthetic test identifier.`);
+  }
+  if (!SYNTHETIC_ID.test(delivery.eventId) || !SYNTHETIC_ID.test(delivery.idempotencyKey)) {
+    throw new TypeError(`deliveries[${index}] identifiers must include a synthetic marker such as test, demo, fixture, or sandbox.`);
   }
   if (!delivery.payload || typeof delivery.payload !== 'object' || Array.isArray(delivery.payload)) {
     throw new TypeError(`deliveries[${index}].payload must be a JSON object.`);

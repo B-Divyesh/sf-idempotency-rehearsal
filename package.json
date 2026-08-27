@@ -43,6 +43,7 @@
     "dev": "vite --config site/vite.config.ts",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:a11y": "node scripts/a11y.mjs",
     "typecheck": "tsc --noEmit",
     "build:package": "tsup src/index.ts src/cli.ts --format esm,cjs --dts --clean --out-dir dist/package --target node20 --sourcemap",
     "build:site": "vite build --config site/vite.config.ts",
@@ -50,8 +51,11 @@
     "pack:check": "npm run build:package && npm pack --dry-run"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@types/node": "^24.3.0",
+    "esbuild": "^0.28.2",
     "jsdom": "^26.1.0",
+    "playwright": "1.58.2",
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
     "vite": "^7.1.3",

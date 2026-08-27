@@ -16,7 +16,7 @@
       <span aria-hidden="true">▦</span> Offline lab mode. The docs and rehearsal demo still work locally.
     </div>
     <header class="site-header">
-      <a class="brand" href="#top" aria-label="Idempotency Rehearsal home">
+      <a class="brand" href="#top">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
         <span>idempotency/<b>rehearsal</b></span>
       </a>
@@ -49,7 +49,7 @@
         </figure>
       </section>
 
-      <section class="proof-strip" aria-label="Product guarantees">
+      <section class="proof-strip" aria-label="Product guarantees" tabindex="0">
         <p><strong>01</strong><span>Declare a sequence</span></p>
         <i aria-hidden="true">→</i>
         <p><strong>02</strong><span>Swap safe adapters</span></p>
@@ -119,14 +119,14 @@
         </div>
         <div class="code-window" aria-label="TypeScript usage example">
           <div class="code-title"><span><i></i><i></i><i></i> order.rehearsal.test.ts</span><button type="button" data-copy-target="code-example">Copy code</button></div>
-          <pre id="code-example"><code><span class="violet">import</span> { defineScenario, runScenario, assertIdempotent }
+          <pre id="code-example" tabindex="0"><code><span class="violet">import</span> { defineScenario, runScenario, assertIdempotent }
   <span class="violet">from</span> <span class="amber">'idempotency-rehearsal'</span>;
 
 <span class="violet">const</span> report = <span class="violet">await</span> runScenario({
   scenario: defineScenario({
     name: <span class="amber">'duplicate after retry'</span>,
     deliveries: [original, { ...duplicate, afterMs: <span class="cyan">250</span> }],
-    expect: [{ adapter: <span class="amber">'payment'</span>, action: <span class="amber">'capture'</span>, count: <span class="cyan">1</span> }],
+    expect: [{ adapter: <span class="amber">'payment'</span>, action: <span class="amber">'capture'</span>, idempotencyKey: <span class="amber">'order_demo_042'</span>, count: <span class="cyan">1</span> }],
   }),
   handler: handleWebhook,
 });

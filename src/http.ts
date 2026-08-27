@@ -96,6 +96,11 @@ export async function runHttpScenario<TPayload extends JsonObject>(options: {
   const scenario = validateScenario(options.scenario);
   const target = new URL(options.url);
   if (!['http:', 'https:'].includes(target.protocol)) throw new TypeError('Target URL must use HTTP or HTTPS.');
+  if (!isLoopback(target.hostname)) throw new TypeError('Target URL must use a loopback host; rehearsals cannot target remote services.');
+  const protectedHeaders = new Set(['authorization', 'cookie', 'x-idempotency-key', 'x-rehearsal-event-id', COLLECTOR_HEADER]);
+  for (const name of Object.keys(options.headers ?? {})) {
+    if (protectedHeaders.has(name.toLowerCase())) throw new TypeError(`The ${name} request header is reserved or secret-bearing.`);
+  }
   const timeoutMs = options.timeoutMs ?? 10_000;
   if (!Number.isFinite(timeoutMs) || timeoutMs < 1 || timeoutMs > 120_000) {
     throw new TypeError('timeoutMs must be between 1 and 120000.');

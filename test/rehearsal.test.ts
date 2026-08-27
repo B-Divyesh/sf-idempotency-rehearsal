@@ -110,6 +110,10 @@ describe('validation', () => {
       name: 'secret',
       deliveries: [{ eventId: 'evt_test', idempotencyKey: 'order_test', payload: { token: 'test-token' } }],
     })).toThrow('secret-bearing');
+    expect(() => defineScenario({
+      name: 'unmarked',
+      deliveries: [{ eventId: 'evt_123', idempotencyKey: 'order_123', payload: {} }],
+    })).toThrow('synthetic marker');
   });
 
   it('refuses a non-loopback effect collector', () => {
@@ -117,6 +121,10 @@ describe('validation', () => {
       headers: { 'x-idempotency-rehearsal-effect-url': 'https://example.com/collect' },
     });
     expect(() => effectClientFromRequest(request)).toThrow('loopback');
+  });
+
+  it('refuses to deliver a rehearsal to a remote target', async () => {
+    await expect(runHttpScenario({ scenario: duplicateScenario, url: 'https://example.com/webhook' })).rejects.toThrow('loopback');
   });
 });
 
