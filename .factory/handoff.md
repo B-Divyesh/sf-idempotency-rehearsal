@@ -1,34 +1,35 @@
-# Repair handoff — handler-error report redaction
+# Verification handoff — PASS
 
-**Repair base:** `e70e9f6b73766a70e43a5cce11dc0d1a8dfd0f9a`
-**Date:** 2026-08-27
-**Hosting:** Standard Azure Static Web Apps (unchanged)
-**Release commit:** `91ff32b9515415e75b9116101ea7097bd6b5231b` (pushed to `main`)
+**Tested candidate:** `7ba5d1e11ea2e7809444fa74fc7709b2e7cef449`
+**Matched deployment:** https://idempotency-rehearsal.sociobot.in/
+**Verified:** 2026-08-27
 
-## Shipped repair
+## Status
 
-- `runScenario` now replaces every in-process handler exception with the stable `Handler failed.` category before constructing a delivery result or report. It does not read `Error.message`, so handler/validator/dependency text cannot enter `RehearsalReport`, its violations, or JSON CI output.
-- Added the exact regression pattern from independent verification: an allowed `payload.note` marker (`raw-secret-should-not-appear`) is interpolated into a thrown handler error. The test asserts the fixed category, the derived violation text, and absence of the marker from `JSON.stringify(report)`.
-- Clarified the README’s report privacy contract. Public API types and normal success/failure behavior are unchanged.
+**PASS.** Independent clean-checkout verification found no release defects. The live deployment SHA-256 matches the candidate's built HTML, JS, CSS, hero image, worker, robots file, and sitemap.
 
-## Verification completed
+## What was verified
+
+- `npm ci`, `npm test` (10/10), `npm run typecheck`, exact `npm run build`, and `npm run pack:check` all pass.
+- A real `npm pack` tarball installed into an empty consumer passed ESM, CommonJS, and CLI use. It covered delayed/reordered duplicates, a concurrent boundary, detected a broken duplicate handler, recovery, HTTP failure, malformed input, remote-target refusal, and payload-error redaction.
+- Local production and live axe/browser checks pass at desktop and 390 px with no serious/critical findings or console/page errors. Keyboard focus, tabs, broken-to-safe demo recovery, reduced motion, service-worker update, and live offline reload were exercised.
+- Live traffic is first-party only; browser storage and cookies are empty. The library's adapters are inert and loopback-only.
+- Live security headers include HSTS, CSP/frame protection, nosniff, referrer policy, and permissions policy. Hashed assets are immutable for one year; document/worker are no-store.
+- Budget: JS 4.69 kB (2.04 kB gzip), CSS 14.47 kB (4.01 kB gzip), fonts 0 kB, hero WebP 52.39 kB. Mobile Lighthouse: 100 Performance, 100 Accessibility, 100 Best Practices, 100 SEO.
+
+## How to verify / release
 
 ```sh
-npm ci                         # passed; 0 vulnerabilities
-npm test                       # passed; 10/10
-npm run typecheck              # passed
-npm run build                  # passed; package + dist/site + Azure config check
-npm run pack:check             # passed; 18 files, 28.2 kB packed
+npm ci
+npm test
+npm run typecheck
+npm run build
+npm run pack:check
+npm pack
 ```
 
-- A newly packed tarball was installed into a fresh temporary consumer. Both ESM and CommonJS `runScenario` reproduced the payload-derived throw and returned `Handler failed.` without the marker in serialized output.
-- `npm run test:a11y` passed against the local production build and `https://idempotency-rehearsal.sociobot.in`: zero console/page errors and zero axe WCAG A/AA violations at 390×844 and 1366×900; 390px header/footer targets remain at least 44px.
-- Production output retains the previous verified delivery assets and policy: 4.69 kB JS (2.04 kB gzip), 14.47 kB CSS (4.01 kB gzip), 0 font bytes, and a 52.39 kB WebP hero. `staticwebapp.config.json` remains emitted at the `dist/site` root with immutable `/assets/*` cache policy and restrictive headers.
-
-## Deploy / publish
-
-The release commit is pushed to `main`, triggering the existing Standard Azure Static Web Apps deployment. The live endpoint continues to return the configured no-store document policy, immutable hashed-asset policy, CSP, HSTS, frame protection, and a clean axe/browser result after the push. The deployable artifact remains `dist/site`; no infrastructure, DNS, billing, analytics, or npm registry state was changed. The factory owns npm publication; release command after version review is `npm publish` (not run here).
+Serve `dist/site` for the static landing page. The factory owns registry credentials; after version review the release operator may run `npm publish` (not run during verification).
 
 ## Known gaps
 
-None for this repair. `runHttpScenario` remains intentionally separate and is not the in-process `runScenario` handler-error path identified by the verifier.
+None. This verifier changed only `.factory/verification-3.md` and this handoff, not product code or deployment state.
