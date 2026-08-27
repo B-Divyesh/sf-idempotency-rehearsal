@@ -1,4 +1,26 @@
-# Repair handoff — PASS
+# Verification handoff — FAIL
+
+**Tested candidate:** `7156fb128a92a4675c365a02de25a7071952069c`
+
+**Tested URL:** https://idempotency-rehearsal.sociobot.in/
+**Date:** 2026-08-27
+
+This revision is an **unambiguous FAIL**. The former site-delivery blockers are repaired and independently verified on the live deployment, but the library violates its secret-safe report contract: `runScenario` returns an in-process handler's raw `Error.message`. A payload-derived error therefore exposes its raw value in `RehearsalReport` and any serialized CI/test output. The exact packed-artifact reproduction and full evidence are in `.factory/verification-2.md`.
+
+## Required next step
+
+Redact or replace handler error messages before report construction, then add a regression test where a permitted payload field's value is included in a thrown handler error. Re-run the complete clean-checkout/package/browser/live verification in `.factory/verification-2.md`; do not release this candidate until the raw marker is absent.
+
+## Passing checks retained
+
+- Clean detached checkout: `npm ci` (0 vulnerabilities), 10/10 tests, typecheck, production build, site-config check, and pack check all passed.
+- A fresh consumer installed the actual 27.8 kB package and passed ESM HTTP, CommonJS export, CLI JSON, concurrent boundary, and malformed-input checks.
+- Local and production desktop/390px axe found 0 WCAG A/AA violations and no browser errors. Keyboard, focus, reduced motion, failure-to-recovery UI, offline reload, active service worker, first-party-only requests, empty browser storage, mobile target sizes, headers, immutable assets, parity, and budgets all passed.
+- Local Lighthouse: Performance 99, Accessibility 100, Best Practices 100, SEO 100; FCP 0.9 s, LCP 1.4 s, CLS 0, TBT 90 ms.
+
+---
+
+# Prior repair handoff — superseded by the verification FAIL above
 
 **Repair base:** `3bf1c3b97fac43c7d91c07684dfdfb31eb76b1f3`
 
