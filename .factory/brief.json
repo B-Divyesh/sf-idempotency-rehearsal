@@ -1,0 +1,12 @@
+{
+  "slug": "idempotency-rehearsal",
+  "title": "Idempotency Rehearsal",
+  "territory": "devtools-data",
+  "user": "Backend engineers handling webhooks or workflow triggers who need to prove duplicate, delayed, and out-of-order events do not create a second business action.",
+  "smallest_useful_product": "A local CLI/test-library that sends a declared event sequence to an HTTP handler, records outbound effects through adapters, and asserts one logical effect per idempotency key. Non-goals: webhook delivery infrastructure, queues, or production event storage.",
+  "success_measure": "A team adds at least five duplicate/retry scenarios and catches a non-idempotent path before release within 60 days.",
+  "artifact_class": "library-npm",
+  "monetization": "free",
+  "constraints": "Default adapters must prevent real payment/email calls; test IDs must be synthetic; never log raw event secrets.",
+  "state": "RESEARCHED"
+}
