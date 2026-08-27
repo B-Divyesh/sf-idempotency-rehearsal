@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080b0f" />
+    <meta name="description" content="A local TypeScript library and CLI that proves duplicate webhooks produce one business effect." />
+    <title>Idempotency Rehearsal — prove one event means one effect</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/assets/signal-lab.webp" as="image" type="image/webp" fetchpriority="high" />
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <div class="offline" id="offline" role="status" hidden>
+      <span aria-hidden="true">▦</span> Offline lab mode. The docs and rehearsal demo still work locally.
+    </div>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Idempotency Rehearsal home">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>idempotency/<b>rehearsal</b></span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#demo">Rehearse</a>
+        <a href="#install">Install</a>
+        <a href="#contract">Contract</a>
+        <a class="nav-github" href="https://github.com/B-Divyesh/sf-idempotency-rehearsal">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span aria-hidden="true">●</span> Local proof harness / npm</p>
+          <h1 id="page-title">Send it twice.<br /><em>Prove it happens once.</em></h1>
+          <p class="lede">Rehearse duplicate, delayed, and out-of-order webhooks before they charge, email, or provision twice.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#demo">Run the rehearsal <span aria-hidden="true">↓</span></a>
+            <button class="button command" type="button" data-copy="npm i -D idempotency-rehearsal" aria-describedby="copy-status">
+              <code>npm i -D idempotency-rehearsal</code><span aria-hidden="true">⧉</span>
+            </button>
+          </div>
+          <p class="microcopy">Zero runtime dependencies · No real provider calls · No telemetry</p>
+        </div>
+        <figure class="hero-visual">
+          <div class="screen-label"><span>DUPE_GATE/01</span><span>ARMED</span></div>
+          <img src="/assets/signal-lab.webp" width="1400" height="933" alt="Pixel-art signal lab where two identical green event pulses enter a gate and one cyan effect pulse exits." fetchpriority="high" />
+          <figcaption><span>IN: 02 EVENTS</span><span>OUT: 01 EFFECT</span></figcaption>
+        </figure>
+      </section>
+
+      <section class="proof-strip" aria-label="Product guarantees">
+        <p><strong>01</strong><span>Declare a sequence</span></p>
+        <i aria-hidden="true">→</i>
+        <p><strong>02</strong><span>Swap safe adapters</span></p>
+        <i aria-hidden="true">→</i>
+        <p><strong>03</strong><span>Assert one effect</span></p>
+      </section>
+
+      <section class="demo section" id="demo" aria-labelledby="demo-title">
+        <div class="section-intro">
+          <p class="kicker">Interactive trace</p>
+          <h2 id="demo-title">Watch the same event cross the boundary twice.</h2>
+          <p>This browser demo mirrors the library’s report model. Choose a handler, then inspect every delivery and business effect.</p>
+        </div>
+
+        <div class="lab" data-state="ready">
+          <div class="lab-toolbar">
+            <div class="tabs" role="tablist" aria-label="Handler behavior">
+              <button type="button" role="tab" id="safe-tab" aria-controls="trace-panel" aria-selected="true" data-mode="safe">Idempotent handler</button>
+              <button type="button" role="tab" id="broken-tab" aria-controls="trace-panel" aria-selected="false" data-mode="broken" tabindex="-1">Broken handler</button>
+              <button type="button" role="tab" id="reorder-tab" aria-controls="trace-panel" aria-selected="false" data-mode="reorder" tabindex="-1">Out of order</button>
+            </div>
+            <span class="lab-state" id="lab-state"><i aria-hidden="true"></i> Ready</span>
+          </div>
+
+          <div class="trace" id="trace-panel" role="tabpanel" aria-labelledby="safe-tab">
+            <div class="trace-column">
+              <div class="trace-heading"><span>INPUT / DELIVERIES</span><span id="delivery-count">0/2</span></div>
+              <ol class="event-list" id="event-list">
+                <li data-event="0">
+                  <span class="event-index">01</span>
+                  <span><strong>order.created</strong><code>key: order_demo_042</code></span>
+                  <span class="event-status">queued</span>
+                </li>
+                <li data-event="1">
+                  <span class="event-index">02</span>
+                  <span><strong>order.created</strong><code>key: order_demo_042</code></span>
+                  <span class="event-status">+250 ms</span>
+                </li>
+              </ol>
+            </div>
+
+            <div class="gate" aria-hidden="true"><span>IF NEW</span><i></i><b>→</b></div>
+
+            <div class="trace-column output-column">
+              <div class="trace-heading"><span>OUTPUT / EFFECTS</span><span id="effect-count">0</span></div>
+              <div class="empty-output" id="empty-output">
+                <span aria-hidden="true">░░░</span>
+                <p>No effects recorded yet.</p>
+                <small>Start the rehearsal to populate this trace.</small>
+              </div>
+              <ol class="effect-list" id="effect-list" aria-label="Recorded effects"></ol>
+            </div>
+          </div>
+
+          <div class="verdict" id="verdict" aria-live="polite">
+            <div><span class="verdict-symbol" aria-hidden="true">?</span><span><strong>Awaiting proof</strong><small>Two synthetic deliveries are ready.</small></span></div>
+            <button class="button primary" type="button" id="run-demo">Start rehearsal <span aria-hidden="true">▶</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section install" id="install" aria-labelledby="install-title">
+        <div class="section-intro narrow">
+          <p class="kicker">Five-minute setup</p>
+          <h2 id="install-title">A test artifact your CI can enforce.</h2>
+          <p>Use the in-process recorder for unit tests or point the CLI at a running local handler. Both produce the same secret-safe report.</p>
+        </div>
+        <div class="code-window" aria-label="TypeScript usage example">
+          <div class="code-title"><span><i></i><i></i><i></i> order.rehearsal.test.ts</span><button type="button" data-copy-target="code-example">Copy code</button></div>
+          <pre id="code-example"><code><span class="violet">import</span> { defineScenario, runScenario, assertIdempotent }
+  <span class="violet">from</span> <span class="amber">'idempotency-rehearsal'</span>;
+
+<span class="violet">const</span> report = <span class="violet">await</span> runScenario({
+  scenario: defineScenario({
+    name: <span class="amber">'duplicate after retry'</span>,
+    deliveries: [original, { ...duplicate, afterMs: <span class="cyan">250</span> }],
+    expect: [{ adapter: <span class="amber">'payment'</span>, action: <span class="amber">'capture'</span>, count: <span class="cyan">1</span> }],
+  }),
+  handler: handleWebhook,
+});
+
+assertIdempotent(report); <span class="comment">// exits loudly on the second effect</span></code></pre>
+        </div>
+      </section>
+
+      <section class="section contract" id="contract" aria-labelledby="contract-title">
+        <div class="section-intro">
+          <p class="kicker">The safety contract</p>
+          <h2 id="contract-title">Production-shaped. Production-safe.</h2>
+          <p>The harness exercises timing and ordering without turning your test into a payment or email cannon.</p>
+        </div>
+        <div class="contract-grid">
+          <article><span class="pixel-icon" aria-hidden="true">▦</span><h3>Declare the bad timeline</h3><p>Duplicate IDs, delayed retries, and concurrent groups are readable data—not bespoke sleep-and-curl scripts.</p></article>
+          <article><span class="pixel-icon" aria-hidden="true">⊘</span><h3>Real side effects stay off</h3><p>Payment and email adapters record intent only. HTTP collection is loopback-only and test IDs are validated.</p></article>
+          <article><span class="pixel-icon" aria-hidden="true">✓</span><h3>Keep a durable proof</h3><p>Exact expectations and stable JSON output make the scenario a regression test your CI can keep.</p></article>
+        </div>
+      </section>
+
+      <section class="section cli" aria-labelledby="cli-title">
+        <div>
+          <p class="kicker">CLI mode</p>
+          <h2 id="cli-title">Aim it at localhost.</h2>
+          <p>The runner posts your declared sequence and opens a temporary loopback collector for test-only effect adapters.</p>
+        </div>
+        <div class="terminal">
+          <div><span>local</span><span>80×24</span></div>
+          <code><b>$</b> npx idempotency-rehearsal run duplicate.json \<br />&nbsp;&nbsp;&nbsp;&nbsp;--target http://127.0.0.1:3000/webhooks/orders<br /><br /><span class="green">PASS</span>&nbsp; delayed duplicate<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 deliveries · 1 effect · 264ms<br />&nbsp;&nbsp;<span class="green">✓</span> one logical effect per idempotency key</code>
+        </div>
+      </section>
+
+      <section class="final-cta" aria-labelledby="cta-title">
+        <div class="cta-pulse" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div><p class="kicker">Before the next retry</p><h2 id="cta-title">Make the second delivery boring.</h2></div>
+        <button class="button primary" type="button" data-copy="npm i -D idempotency-rehearsal">Copy install command <span aria-hidden="true">⧉</span></button>
+      </section>
+    </main>
+
+    <footer>
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>idempotency/<b>rehearsal</b></span></div>
+      <p>Open source under MIT. Runs locally. Stores nothing. Sends no analytics.</p>
+      <div><a href="https://github.com/B-Divyesh/sf-idempotency-rehearsal">Source</a><a href="#privacy-note">Privacy</a><a href="#terms-note">Terms</a></div>
+      <small id="privacy-note">Privacy: this static site collects and stores no personal data.</small>
+      <small id="terms-note">Terms: provided as-is under the MIT license.</small>
+    </footer>
+    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
+    <noscript><p class="noscript">JavaScript is only needed for the live rehearsal. Installation and API documentation remain available above.</p></noscript>
+  </body>
+</html>
