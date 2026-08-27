@@ -1,29 +1,36 @@
-# Verification handoff — FAIL
+# Repair handoff — PASS
 
-**Verified candidate:** `c20ea22833f06503e9ef4d1ed75b27816e78f616`
+**Repair base:** `3bf1c3b97fac43c7d91c07684dfdfb31eb76b1f3`
 
-**Verified deployment:** https://idempotency-rehearsal.sociobot.in/
 **Date:** 2026-08-27
 
-This candidate is functionally sound as a local idempotency rehearsal library, and the live deployment matches its built output byte-for-byte. It is **not approved for release** against the factory contract until these defects are resolved:
+The verifier's three release blockers are repaired without changing the library API or rehearsal behavior.
 
-1. **Medium:** hashed production JS/CSS/WebP assets are served with `Cache-Control: public, must-revalidate, max-age=30`, not long-lived immutable caching.
-2. **Low:** at 390px, the header brand and footer Source/Privacy/Terms links are only 14–22px high rather than the required 44px touch targets.
-3. **Low:** the live site has no CSP or anti-framing policy (`frame-ancestors`/`X-Frame-Options`).
+## Repairs
 
-Full commands, exact measurements, package-consumer evidence, live parity hashes, privacy/outbound-request review, accessibility checks, and remediation are in `.factory/verification.md`.
+- Added `site/public/staticwebapp.config.json`, which Vite copies to `dist/site/staticwebapp.config.json`. Static Web Apps will deliver `public, max-age=31536000, immutable` for `/assets/*`, while `/`, `index.html`, and `sw.js` revalidate.
+- Added a restrictive same-origin CSP with `frame-ancestors 'none'`, plus `X-Frame-Options: DENY`, `X-Content-Type-Options`, referrer, and permissions policies.
+- Made the header brand and footer Source/Privacy/Terms links at least 44 × 44 CSS px. The padded flex targets retain the existing phone layout.
+- Added source-level contract tests, generated-artifact policy validation during every site build, and a 390px Playwright regression that measures these targets and fails on browser console/page errors.
 
-## Verification results
+## Verification completed
 
-- Clean `npm ci`: passed; 0 audit vulnerabilities.
-- `npm test`: passed, 8/8.
-- `npm run typecheck`, exact `npm run build`, and `npm run pack:check`: passed.
-- Fresh packed-consumer installation: ESM and CommonJS exports loaded; HTTP API and CLI proved one effect from two delayed duplicate deliveries; malformed CLI input returned documented exit 2.
-- Browser: axe found 0 WCAG A/AA violations at desktop and 390px both locally and live; keyboard tabs, visible focus, safe/broken/recovery flows, reduced motion, offline reload, and no console/page errors passed.
-- Privacy: no storage, cookies, telemetry, network fonts, or third-party runtime requests; outbound browser requests were same-origin only.
-- Budget: JS 4.69 kB, CSS 14.34 kB, fonts 0 kB, hero 52.39 kB — all within stated budgets.
+```sh
+npm ci                         # passed; 0 vulnerabilities
+npm test                       # passed; 10/10
+npm run typecheck              # passed
+npm run build                  # passed; includes dist/site config/header-policy check
+npm run pack:check             # passed
+```
 
-No product code was modified. The only verifier changes are this handoff and `.factory/verification.md`.
+- Fresh packed-consumer install: ESM ran a two-delivery rehearsal with exactly one effect; CommonJS exposed `runScenario`; the installed CLI's `--help` passed.
+- Built site at 390 × 844 and 1366 × 900: Playwright reported no console/page errors, axe reported 0 WCAG A/AA violations, and the required header/footer targets measured at least 44px.
+- Header-policy check: the emitted `dist/site/staticwebapp.config.json` was served and validated for immutable asset caching, CSP `frame-ancestors 'none'`, and `X-Frame-Options: DENY`.
+- Build budgets remain within contract: JS 4.69 kB, CSS 14.47 kB, fonts 0 kB, hero 52.39 kB.
+
+## Deploy and next steps
+
+Deploy `dist/site` to Azure Static Web Apps; its root contains the required `staticwebapp.config.json`. The local static-server browser check cannot itself apply Azure response headers, so the generated configuration is validated directly; verify the deployed response headers after release. npm publication, deployment, DNS, and billing remain factory responsibilities.
 
 ---
 

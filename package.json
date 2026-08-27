@@ -49,8 +49,9 @@
     "test:a11y": "node scripts/a11y.mjs",
     "typecheck": "tsc --noEmit",
     "build:package": "tsup src/index.ts src/cli.ts --format esm,cjs --dts --clean --out-dir dist/package --target node20 --sourcemap",
-    "build:site": "vite build --config site/vite.config.ts",
+    "build:site": "vite build --config site/vite.config.ts && npm run check:site-config",
     "build": "npm run typecheck && npm run build:package && npm run build:site",
+    "check:site-config": "node scripts/check-static-config.mjs",
     "pack:check": "npm run build:package && npm pack --dry-run"
   },
   "devDependencies": {
