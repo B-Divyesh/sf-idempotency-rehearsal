@@ -121,7 +121,7 @@ Run `npx idempotency-rehearsal --help` for all options and exit codes.
 - `expect`: exact counts for `(adapter, action, idempotencyKey)`. Any unlisted effect is allowed once and fails when duplicated.
 - Test identifiers must be synthetic. The library rejects likely live Stripe-style keys and authorization-like fields before delivery.
 
-Reports contain identifiers, timing, statuses, and effect counts. They intentionally omit payloads, request headers, and effect metadata.
+Reports contain identifiers, timing, statuses, and effect counts. They intentionally omit payloads, request headers, and effect metadata; in-process handler failures are reported only as the stable `Handler failed.` category, never as a handler's raw error text.
 
 ## Development
 

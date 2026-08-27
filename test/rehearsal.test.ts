@@ -88,14 +88,20 @@ describe('in-process rehearsal', () => {
     expect(report.passed).toBe(true);
   });
 
-  it('turns handler errors into a secret-safe failed report', async () => {
+  it('redacts payload-derived handler errors from reports and CI serialization', async () => {
+    const marker = 'raw-secret-should-not-appear';
     const scenario = defineScenario({
       name: 'handler error',
-      deliveries: [{ eventId: 'evt_test_error', idempotencyKey: 'order_test_error', payload: { note: 'do-not-report' } }],
+      deliveries: [{ eventId: 'evt_test_error', idempotencyKey: 'order_test_error', payload: { note: marker } }],
     });
-    const report = await runScenario({ scenario, handler: () => { throw new Error('database unavailable'); } });
+    const report = await runScenario({
+      scenario,
+      handler: (delivery) => { throw new Error(`handler failed with ${delivery.payload.note}`); },
+    });
     expect(report.violations[0]).toMatchObject({ kind: 'delivery_error' });
-    expect(JSON.stringify(report)).not.toContain('do-not-report');
+    expect(report.deliveries[0]?.error).toBe('Handler failed.');
+    expect(report.violations[0]?.message).toBe('Delivery evt_test_error failed: Handler failed.');
+    expect(JSON.stringify(report)).not.toContain(marker);
   });
 });
 

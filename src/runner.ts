@@ -12,6 +12,7 @@ import type {
 import { validateScenario } from './validation.js';
 
 const wait = (duration: number) => new Promise<void>((resolve) => setTimeout(resolve, duration));
+const HANDLER_FAILURE = 'Handler failed.';
 
 function deliveryGroups<TPayload extends JsonObject>(deliveries: Delivery<TPayload>[]): Delivery<TPayload>[][] {
   const groups: Delivery<TPayload>[][] = [];
@@ -50,14 +51,17 @@ export async function runScenario<TPayload extends JsonObject>(options: {
           status: 'accepted',
           durationMs: Math.round((performance.now() - started) * 100) / 100,
         };
-      } catch (error) {
+      } catch {
         results[currentIndex] = {
           eventId: delivery.eventId,
           idempotencyKey: delivery.idempotencyKey,
           index: currentIndex,
           status: 'error',
           durationMs: Math.round((performance.now() - started) * 100) / 100,
-          error: error instanceof Error ? error.message : 'Unknown handler error',
+          // Handler errors are untrusted: they may include payload values from a
+          // validator, dependency, or hand-written error message. Keep reports
+          // and CI serialization limited to this stable failure category.
+          error: HANDLER_FAILURE,
         };
       }
     }));
