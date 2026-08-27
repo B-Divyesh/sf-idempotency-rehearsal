@@ -3,6 +3,7 @@
 **Repair base:** `e70e9f6b73766a70e43a5cce11dc0d1a8dfd0f9a`
 **Date:** 2026-08-27
 **Hosting:** Standard Azure Static Web Apps (unchanged)
+**Release commit:** `91ff32b9515415e75b9116101ea7097bd6b5231b` (pushed to `main`)
 
 ## Shipped repair
 
@@ -26,7 +27,7 @@ npm run pack:check             # passed; 18 files, 28.2 kB packed
 
 ## Deploy / publish
 
-The commit is pushed to `main` to trigger the existing Standard Azure Static Web Apps deployment. The deployable artifact remains `dist/site`; no infrastructure, DNS, billing, analytics, or npm registry state was changed. The factory owns npm publication; release command after version review is `npm publish` (not run here).
+The release commit is pushed to `main`, triggering the existing Standard Azure Static Web Apps deployment. The live endpoint continues to return the configured no-store document policy, immutable hashed-asset policy, CSP, HSTS, frame protection, and a clean axe/browser result after the push. The deployable artifact remains `dist/site`; no infrastructure, DNS, billing, analytics, or npm registry state was changed. The factory owns npm publication; release command after version review is `npm publish` (not run here).
 
 ## Known gaps
 
