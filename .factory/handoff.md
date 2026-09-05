@@ -1,23 +1,41 @@
-# Verification handoff — PASS
+# Review handoff — FAIL
 
-**Tested candidate:** `7ba5d1e11ea2e7809444fa74fc7709b2e7cef449`
-**Matched deployment:** https://idempotency-rehearsal.sociobot.in/
-**Verified:** 2026-08-27
+**Implementation reviewed:** `91ff32b9515415e75b9116101ea7097bd6b5231b`
+**Documentation HEAD:** `f4fc65d2e9cd8b6b18c90a0b197c51a3d6c16091`
+**Live URL:** https://idempotency-rehearsal.sociobot.in/
+**Reviewed:** 2026-09-05
 
 ## Status
 
-**PASS.** Independent clean-checkout verification found no release defects. The live deployment SHA-256 matches the candidate's built HTML, JS, CSS, hero image, worker, robots file, and sitemap.
+**FAIL — 4 findings and 14 untested public claims.** The live application exactly
+matches the current build, and the library works, but it does not meet the current
+demo-sandbox, claims, site-structure, or plain-words contracts. See
+`.factory/review-1.md` for complete evidence.
 
 ## What was verified
 
-- `npm ci`, `npm test` (10/10), `npm run typecheck`, exact `npm run build`, and `npm run pack:check` all pass.
-- A real `npm pack` tarball installed into an empty consumer passed ESM, CommonJS, and CLI use. It covered delayed/reordered duplicates, a concurrent boundary, detected a broken duplicate handler, recovery, HTTP failure, malformed input, remote-target refusal, and payload-error redaction.
-- Local production and live axe/browser checks pass at desktop and 390 px with no serious/critical findings or console/page errors. Keyboard focus, tabs, broken-to-safe demo recovery, reduced motion, service-worker update, and live offline reload were exercised.
-- Live traffic is first-party only; browser storage and cookies are empty. The library's adapters are inert and loopback-only.
-- Live security headers include HSTS, CSP/frame protection, nosniff, referrer policy, and permissions policy. Hashed assets are immutable for one year; document/worker are no-store.
-- Budget: JS 4.69 kB (2.04 kB gzip), CSS 14.47 kB (4.01 kB gzip), fonts 0 kB, hero WebP 52.39 kB. Mobile Lighthouse: 100 Performance, 100 Accessibility, 100 Best Practices, 100 SEO.
+- `npm ci`, `npm test` (10/10), `npm run typecheck`, `npm run build`, and
+  `npm run pack:check` pass. A packed tarball worked in a fresh consumer through ESM,
+  CommonJS, and CLI validation.
+- Fresh desktop and phone live browsers exercised safe, invalid/broken, and recovery
+  trace paths. Keyboard, focus, reduced motion, offline reload, worker update,
+  first-party-only requests, blank browser storage, headers, asset parity, and
+  repository Playwright Axe checks passed.
+- All earlier cache/CSP/touch-target and handler-error-redaction findings are fixed.
 
-## How to verify / release
+## Required next steps
+
+1. Build `/demo` as a package-backed, one-click library playground with a persistent
+   sample-data sandbox label, reset, and explicit exit; document it in `.factory/demo.md`.
+2. Add `.factory/claims.json` and one clean-demo observable `@claim:<id>` test for
+   every public claim; remove any claim that cannot be tested.
+3. Add real `/privacy`, `/terms`, and designed `/404` routes, per-route metadata,
+   sitemap entries, and Static Web Apps fallback/404 configuration.
+4. Rewrite the first screen and headings in plain words: name backend engineers, the
+   webhook-proof job, and the sample-data first action/result; commit the required
+   copy audit.
+
+## How to verify after repair
 
 ```sh
 npm ci
@@ -28,8 +46,6 @@ npm run pack:check
 npm pack
 ```
 
-Serve `dist/site` for the static landing page. The factory owns registry credentials; after version review the release operator may run `npm publish` (not run during verification).
-
-## Known gaps
-
-None. This verifier changed only `.factory/verification-3.md` and this handoff, not product code or deployment state.
+Also run every command in `.factory/claims.json`, test `/demo` in a fresh browser
+context, and repeat the live desktop/phone, routes, metadata, accessibility, offline,
+and packaged-consumer checks in `.factory/review-1.md`.
