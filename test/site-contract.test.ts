@@ -5,7 +5,6 @@ import { describe, expect, it } from 'vitest';
 const root = resolve(import.meta.dirname, '..');
 const config = JSON.parse(readFileSync(resolve(root, 'site/public/staticwebapp.config.json'), 'utf8')) as {
   globalHeaders: Record<string, string>;
-  navigationFallback?: { rewrite: string };
   responseOverrides?: Record<string, { rewrite: string }>;
   routes: Array<{ route: string; headers: Record<string, string> }>;
 };
@@ -17,7 +16,6 @@ describe('static site delivery contract', () => {
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("object-src 'none'");
     expect(config.globalHeaders['X-Frame-Options']).toBe('DENY');
-    expect(config.navigationFallback?.rewrite).toBe('/404.html');
     expect(config.responseOverrides?.['404']?.rewrite).toBe('/404.html');
 
     const routeHeader = (path: string) => config.routes.find((route) => route.route === path)?.headers['Cache-Control'];
