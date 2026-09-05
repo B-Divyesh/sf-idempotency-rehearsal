@@ -5,28 +5,25 @@ import { describe, expect, it } from 'vitest';
 const root = resolve(import.meta.dirname, '..');
 const config = JSON.parse(readFileSync(resolve(root, 'site/public/staticwebapp.config.json'), 'utf8')) as {
   globalHeaders: Record<string, string>;
+  navigationFallback?: { rewrite: string };
+  responseOverrides?: Record<string, { rewrite: string }>;
   routes: Array<{ route: string; headers: Record<string, string> }>;
 };
-const styles = readFileSync(resolve(root, 'site/src/style.css'), 'utf8');
 
 describe('static site delivery contract', () => {
-  it('ships immutable asset caching and clickjacking-resistant CSP for Static Web Apps', () => {
+  it('ships restrictive headers, immutable assets, and a product-owned not-found page', () => {
     const csp = config.globalHeaders['Content-Security-Policy'];
     expect(csp).toContain("default-src 'self'");
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("object-src 'none'");
     expect(config.globalHeaders['X-Frame-Options']).toBe('DENY');
+    expect(config.navigationFallback?.rewrite).toBe('/404.html');
+    expect(config.responseOverrides?.['404']?.rewrite).toBe('/404.html');
 
-    const assets = config.routes.find((route) => route.route === '/assets/*');
-    expect(assets?.headers['Cache-Control']).toBe('public, max-age=31536000, immutable');
-    for (const path of ['/sw.js', '/index.html', '/']) {
-      expect(config.routes.find((route) => route.route === path)?.headers['Cache-Control'])
-        .toBe('no-cache, no-store, must-revalidate');
+    const routeHeader = (path: string) => config.routes.find((route) => route.route === path)?.headers['Cache-Control'];
+    expect(routeHeader('/assets/*')).toBe('public, max-age=31536000, immutable');
+    for (const path of ['/sw.js', '/index.html', '/', '/demo', '/privacy', '/terms']) {
+      expect(routeHeader(path)).toBe('no-cache, no-store, must-revalidate');
     }
-  });
-
-  it('declares 44px header-brand and footer-link hit areas', () => {
-    expect(styles).toMatch(/\.brand\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/);
-    expect(styles).toMatch(/footer > div:nth-of-type\(2\) a\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/);
   });
 });

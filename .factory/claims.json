@@ -1,0 +1,79 @@
+[
+  {
+    "id": "demo-one-click",
+    "claim": "The demo runs two sample duplicate deliveries and shows one payment effect.",
+    "where": "Landing first screen, demo page, README",
+    "test": "npm run build && npm run test:claims -- --grep @claim:demo-one-click",
+    "sandbox": "Fresh browser context at /demo?demo=1; run the sample and assert two deliveries and one recorded effect."
+  },
+  {
+    "id": "demo-reset-isolation",
+    "claim": "Demo data uses the demo browser namespace and Reset demo returns the sample to an empty result.",
+    "where": "Demo banner, demo notes, Privacy",
+    "test": "npm run build && npm run test:claims -- --grep @claim:demo-reset-isolation",
+    "sandbox": "Fresh browser context at /demo?demo=1; populate the sample, inspect storage namespaces, then reset."
+  },
+  {
+    "id": "duplicate-detection",
+    "claim": "The sample reports a duplicate payment effect for a broken handler and passes again with an idempotent handler.",
+    "where": "Demo page",
+    "test": "npm run build && npm run test:claims -- --grep @claim:duplicate-detection",
+    "sandbox": "Fresh browser context; run Broken handler, then recover with Idempotent handler."
+  },
+  {
+    "id": "reordered-sample",
+    "claim": "The sample can run a reordered delivery and still check for one payment effect.",
+    "where": "Landing first screen, demo page",
+    "test": "npm run build && npm run test:claims -- --grep @claim:reordered-sample",
+    "sandbox": "Fresh browser context; choose Reordered delivery and assert the retry is first and the result passes."
+  },
+  {
+    "id": "offline-demo",
+    "claim": "The demo is available offline after its first visit.",
+    "where": "Offline status",
+    "test": "npm run build && npm run test:claims -- --grep @claim:offline-demo",
+    "sandbox": "New browser context; install the service worker on /demo, then reload while offline."
+  },
+  {
+    "id": "same-origin-demo",
+    "claim": "The demo sends requests only to this site and uses no analytics request.",
+    "where": "Privacy, README",
+    "test": "npm run build && npm run test:claims -- --grep @claim:same-origin-demo",
+    "sandbox": "Fresh browser context records every request while the demo runs and permits only the local product origin."
+  },
+  {
+    "id": "inert-adapters",
+    "claim": "The sample payment and email adapters record effects without calling a provider.",
+    "where": "Landing facts, README",
+    "test": "npm run build && npm run test:claims -- --grep @claim:inert-adapters",
+    "sandbox": "Built browser package records payment and email effects while a fetch spy proves no request is made."
+  },
+  {
+    "id": "secret-safe-report",
+    "claim": "Reports omit payload values and raw handler error text.",
+    "where": "Landing install section, README",
+    "test": "npm run build && npm run test:claims -- --grep @claim:secret-safe-report",
+    "sandbox": "Built browser package throws a payload-derived handler error and asserts serialized output omits the marker."
+  },
+  {
+    "id": "loopback-only",
+    "claim": "HTTP rehearsals refuse remote targets.",
+    "where": "Landing steps, README",
+    "test": "npm run build && npm run test:claims -- --grep @claim:loopback-only",
+    "sandbox": "Built Node package attempts a remote URL and asserts it is refused before a request is made."
+  },
+  {
+    "id": "synthetic-identifiers",
+    "claim": "Scenarios require synthetic identifiers and reject secret-bearing payload fields.",
+    "where": "Landing install section, README",
+    "test": "npm run build && npm run test:claims -- --grep @claim:synthetic-identifiers",
+    "sandbox": "Built browser package validates live-looking identifiers and a secret-bearing payload field."
+  },
+  {
+    "id": "local-package",
+    "claim": "The MIT-licensed package runs locally as ESM, CommonJS, browser entry, and CLI.",
+    "where": "Landing facts, README, Terms",
+    "test": "npm run build && npm run test:claims -- --grep @claim:local-package",
+    "sandbox": "A fresh temporary consumer installs npm pack output, runs an ESM duplicate proof, checks CommonJS and browser entry, runs the CLI against a loopback handler, and reads LICENSE."
+  }
+]

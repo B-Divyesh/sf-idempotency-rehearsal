@@ -1,5 +1,5 @@
-const CACHE = 'idempotency-rehearsal-v1';
-const SHELL = ['/', '/assets/signal-lab.webp', '/favicon.svg'];
+const CACHE = 'idempotency-rehearsal-v2';
+const SHELL = ['/', '/demo', '/privacy', '/terms', '/404.html', '/assets/signal-lab.webp', '/assets/social-card.webp', '/favicon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));

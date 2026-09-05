@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080b0f" />
+    <meta name="description" content="Run a sample duplicate webhook scenario in an isolated browser sandbox." />
+    <link rel="canonical" href="https://idempotency-rehearsal.sociobot.in/demo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Demo — Idempotency Rehearsal" />
+    <meta property="og:description" content="Run a sample duplicate webhook scenario in an isolated browser sandbox." />
+    <meta property="og:image" content="https://idempotency-rehearsal.sociobot.in/assets/social-card.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Demo — Idempotency Rehearsal" />
+    <meta name="twitter:description" content="Run a sample duplicate webhook scenario in an isolated browser sandbox." />
+    <meta name="twitter:image" content="https://idempotency-rehearsal.sociobot.in/assets/social-card.webp" />
+    <title>Demo — Idempotency Rehearsal</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <script type="module" src="../src/main.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <div class="offline" id="offline-status" role="status" hidden>Offline. This page is using files already saved by your browser.</div>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Idempotency Rehearsal home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>idempotency/<b>rehearsal</b></span></a>
+      <nav aria-label="Primary navigation"><a aria-current="page" href="/demo">Demo</a><a href="/#how-it-works">How it works</a><a href="/#install">Install</a><a href="/privacy">Privacy</a></nav>
+    </header>
+    <main id="main">
+      <section class="demo-page section" aria-labelledby="page-title">
+        <div class="demo-banner" role="status"><span>Demo — sample data, nothing is saved</span><div><button type="button" id="reset-demo">Reset demo</button><a href="/" data-leave-demo>Start for real</a></div></div>
+        <div class="section-intro"><p class="kicker">Browser playground</p><h1 id="page-title">Run a sample duplicate webhook</h1><p>Choose a handler, run two sample deliveries, and check whether one payment effect is recorded.</p></div>
+        <div class="lab" data-demo-playground>
+          <div class="lab-toolbar"><div class="tabs" role="tablist" aria-label="Sample handler behavior"><button type="button" role="tab" id="idempotent-tab" aria-controls="demo-panel" aria-selected="true" data-mode="idempotent">Idempotent handler</button><button type="button" role="tab" id="broken-tab" aria-controls="demo-panel" aria-selected="false" data-mode="broken" tabindex="-1">Broken handler</button><button type="button" role="tab" id="reordered-tab" aria-controls="demo-panel" aria-selected="false" data-mode="reordered" tabindex="-1">Reordered delivery</button></div><span class="lab-state" id="demo-status" data-state="ready">Ready</span></div>
+          <div class="playground-grid" id="demo-panel" role="tabpanel" aria-labelledby="idempotent-tab">
+            <section aria-labelledby="deliveries-title"><h2 id="deliveries-title">Sample deliveries</h2><ol id="demo-deliveries" class="trace-list" aria-live="polite"></ol><p class="empty-note">Two order.created deliveries share <code>order_demo_042</code>.</p></section>
+            <section aria-labelledby="effects-title"><h2 id="effects-title">Recorded effects</h2><ol id="demo-effects" class="trace-list" aria-live="polite"></ol><p class="empty-note">The browser entry uses an in-memory effect recorder.</p></section>
+          </div>
+          <div class="demo-result" id="demo-result" data-state="ready" aria-live="polite"><strong>Sample is ready.</strong><span>Select a handler and run two synthetic deliveries.</span></div>
+          <div class="lab-actions"><button class="button primary" type="button" id="run-sample">Run sample scenario</button><span>Runs the package’s browser-safe entry in this page.</span></div>
+        </div>
+      </section>
+      <section class="section demo-notes" aria-labelledby="demo-notes-title"><div class="section-intro narrow"><p class="kicker">About this sample</p><h2 id="demo-notes-title">The demo does not use your handler or data</h2><p>It uses two synthetic order events and an in-memory recorder. Reset clears the sample result. Start for real returns to installation steps.</p></div></section>
+    </main>
+    <footer>
+      <div><a class="brand" href="/" aria-label="Idempotency Rehearsal home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>idempotency/<b>rehearsal</b></span></a><p>Local checks for duplicate webhook effects.</p></div>
+      <div class="footer-links"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://github.com/B-Divyesh/sf-idempotency-rehearsal" rel="noreferrer">Source (GitHub)</a></div><small>Built by Param Factory · v0.1.0</small>
+    </footer>
+    <div class="sr-only" id="route-announcement" aria-live="polite"></div>
+  </body>
+</html>

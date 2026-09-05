@@ -4,177 +4,64 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#080b0f" />
-    <meta name="description" content="A local TypeScript library and CLI that proves duplicate webhooks produce one business effect." />
-    <title>Idempotency Rehearsal — prove one event means one effect</title>
+    <meta name="description" content="A local npm library for backend engineers to prove webhook retries cause one business effect." />
+    <link rel="canonical" href="https://idempotency-rehearsal.sociobot.in/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Idempotency Rehearsal — prove webhook retries" />
+    <meta property="og:description" content="Run a sample duplicate webhook and check for one business effect." />
+    <meta property="og:image" content="https://idempotency-rehearsal.sociobot.in/assets/social-card.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Idempotency Rehearsal — prove webhook retries" />
+    <meta name="twitter:description" content="Run a sample duplicate webhook and check for one business effect." />
+    <meta name="twitter:image" content="https://idempotency-rehearsal.sociobot.in/assets/social-card.webp" />
+    <title>Idempotency Rehearsal — prove webhook retries</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="preload" href="/assets/signal-lab.webp" as="image" type="image/webp" fetchpriority="high" />
     <script type="module" src="/src/main.ts"></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
-    <div class="offline" id="offline" role="status" hidden>
-      <span aria-hidden="true">▦</span> Offline lab mode. The docs and rehearsal demo still work locally.
-    </div>
+    <div class="offline" id="offline-status" role="status" hidden>Offline. This page is using files already saved by your browser.</div>
     <header class="site-header">
-      <a class="brand" href="#top">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span>idempotency/<b>rehearsal</b></span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a href="#demo">Rehearse</a>
-        <a href="#install">Install</a>
-        <a href="#contract">Contract</a>
-        <a class="nav-github" href="https://github.com/B-Divyesh/sf-idempotency-rehearsal">GitHub <span aria-hidden="true">↗</span></a>
-      </nav>
+      <a class="brand" href="/" aria-label="Idempotency Rehearsal home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>idempotency/<b>rehearsal</b></span></a>
+      <nav aria-label="Primary navigation"><a href="/demo">Demo</a><a href="#how-it-works">How it works</a><a href="#install">Install</a><a href="/privacy">Privacy</a></nav>
     </header>
-
     <main id="main">
-      <section class="hero" id="top" aria-labelledby="page-title">
+      <section class="hero" aria-labelledby="page-title">
         <div class="hero-copy">
-          <p class="eyebrow"><span aria-hidden="true">●</span> Local proof harness / npm</p>
-          <h1 id="page-title">Send it twice.<br /><em>Prove it happens once.</em></h1>
-          <p class="lede">Rehearse duplicate, delayed, and out-of-order webhooks before they charge, email, or provision twice.</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#demo">Run the rehearsal <span aria-hidden="true">↓</span></a>
-            <button class="button command" type="button" data-copy="npm i -D idempotency-rehearsal" aria-describedby="copy-status">
-              <code>npm i -D idempotency-rehearsal</code><span aria-hidden="true">⧉</span>
-            </button>
-          </div>
-          <p class="microcopy">Zero runtime dependencies · No real provider calls · No telemetry</p>
+          <p class="eyebrow">Local npm library</p>
+          <h1 id="page-title">Prove webhook retries cause one effect</h1>
+          <p class="lede">For backend engineers who need to catch duplicate, delayed, and reordered webhook actions before release.</p>
+          <div class="hero-actions"><a class="button primary" href="/demo?demo=1">Try it with sample data</a><span class="action-result">Runs two sample deliveries and shows one payment effect.</span></div>
+          <ul class="plain-facts" aria-label="Product facts"><li>Free MIT-licensed package</li><li>Runs in your local test setup</li><li>Sample adapters do not call providers</li></ul>
         </div>
-        <figure class="hero-visual">
-          <div class="screen-label"><span>DUPE_GATE/01</span><span>ARMED</span></div>
-          <img src="/assets/signal-lab.webp" width="1400" height="933" alt="Pixel-art signal lab where two identical green event pulses enter a gate and one cyan effect pulse exits." fetchpriority="high" />
-          <figcaption><span>IN: 02 EVENTS</span><span>OUT: 01 EFFECT</span></figcaption>
-        </figure>
+        <figure class="hero-visual"><div class="screen-label"><span>INPUT: 02 EVENTS</span><span>OUTPUT: 01 EFFECT</span></div><img src="/assets/signal-lab.webp" width="1400" height="933" alt="Pixel-art signal lab showing two event pulses entering a gate and one business-effect pulse leaving." fetchpriority="high" /><figcaption>Duplicate delivery checked before release</figcaption></figure>
       </section>
-
-      <section class="proof-strip" aria-label="Product guarantees" tabindex="0">
-        <p><strong>01</strong><span>Declare a sequence</span></p>
-        <i aria-hidden="true">→</i>
-        <p><strong>02</strong><span>Swap safe adapters</span></p>
-        <i aria-hidden="true">→</i>
-        <p><strong>03</strong><span>Assert one effect</span></p>
+      <section class="section preview" aria-labelledby="preview-title">
+        <div class="section-intro"><p class="kicker">Sample result</p><h2 id="preview-title">See the result before you install</h2><p>The sandbox uses the browser entry from this package. It never calls a payment or email provider.</p></div>
+        <div class="result-preview" aria-label="Example passing result"><span class="result-mark" aria-hidden="true">✓</span><div><strong>PASS — one payment effect</strong><span>2 deliveries · 1 recorded effect · order_demo_042</span></div><a class="button" href="/demo?demo=1">Open the sample</a></div>
       </section>
-
-      <section class="demo section" id="demo" aria-labelledby="demo-title">
-        <div class="section-intro">
-          <p class="kicker">Interactive trace</p>
-          <h2 id="demo-title">Watch the same event cross the boundary twice.</h2>
-          <p>This browser demo mirrors the library’s report model. Choose a handler, then inspect every delivery and business effect.</p>
-        </div>
-
-        <div class="lab" data-state="ready">
-          <div class="lab-toolbar">
-            <div class="tabs" role="tablist" aria-label="Handler behavior">
-              <button type="button" role="tab" id="safe-tab" aria-controls="trace-panel" aria-selected="true" data-mode="safe">Idempotent handler</button>
-              <button type="button" role="tab" id="broken-tab" aria-controls="trace-panel" aria-selected="false" data-mode="broken" tabindex="-1">Broken handler</button>
-              <button type="button" role="tab" id="reorder-tab" aria-controls="trace-panel" aria-selected="false" data-mode="reorder" tabindex="-1">Out of order</button>
-            </div>
-            <span class="lab-state" id="lab-state"><i aria-hidden="true"></i> Ready</span>
-          </div>
-
-          <div class="trace" id="trace-panel" role="tabpanel" aria-labelledby="safe-tab">
-            <div class="trace-column">
-              <div class="trace-heading"><span>INPUT / DELIVERIES</span><span id="delivery-count">0/2</span></div>
-              <ol class="event-list" id="event-list">
-                <li data-event="0">
-                  <span class="event-index">01</span>
-                  <span><strong>order.created</strong><code>key: order_demo_042</code></span>
-                  <span class="event-status">queued</span>
-                </li>
-                <li data-event="1">
-                  <span class="event-index">02</span>
-                  <span><strong>order.created</strong><code>key: order_demo_042</code></span>
-                  <span class="event-status">+250 ms</span>
-                </li>
-              </ol>
-            </div>
-
-            <div class="gate" aria-hidden="true"><span>IF NEW</span><i></i><b>→</b></div>
-
-            <div class="trace-column output-column">
-              <div class="trace-heading"><span>OUTPUT / EFFECTS</span><span id="effect-count">0</span></div>
-              <div class="empty-output" id="empty-output">
-                <span aria-hidden="true">░░░</span>
-                <p>No effects recorded yet.</p>
-                <small>Start the rehearsal to populate this trace.</small>
-              </div>
-              <ol class="effect-list" id="effect-list" aria-label="Recorded effects"></ol>
-            </div>
-          </div>
-
-          <div class="verdict" id="verdict" aria-live="polite">
-            <div><span class="verdict-symbol" aria-hidden="true">?</span><span><strong>Awaiting proof</strong><small>Two synthetic deliveries are ready.</small></span></div>
-            <button class="button primary" type="button" id="run-demo">Start rehearsal <span aria-hidden="true">▶</span></button>
-          </div>
-        </div>
+      <section class="section steps" id="how-it-works" aria-labelledby="how-title">
+        <div class="section-intro"><p class="kicker">How it works</p><h2 id="how-title">Check one logical effect per idempotency key</h2></div>
+        <ol>
+          <li><span>1</span><div><h3>Define synthetic deliveries</h3><p>List the original event, retry, delay, or reorder case you need to test.</p></div></li>
+          <li><span>2</span><div><h3>Run your handler locally</h3><p>Use an in-process function or a loopback HTTP endpoint in test wiring.</p></div></li>
+          <li><span>3</span><div><h3>Inspect the report</h3><p>Fail the test when an adapter records more than one expected effect.</p></div></li>
+        </ol>
       </section>
-
       <section class="section install" id="install" aria-labelledby="install-title">
-        <div class="section-intro narrow">
-          <p class="kicker">Five-minute setup</p>
-          <h2 id="install-title">A test artifact your CI can enforce.</h2>
-          <p>Use the in-process recorder for unit tests or point the CLI at a running local handler. Both produce the same secret-safe report.</p>
-        </div>
-        <div class="code-window" aria-label="TypeScript usage example">
-          <div class="code-title"><span><i></i><i></i><i></i> order.rehearsal.test.ts</span><button type="button" data-copy-target="code-example">Copy code</button></div>
-          <pre id="code-example" tabindex="0"><code><span class="violet">import</span> { defineScenario, runScenario, assertIdempotent }
-  <span class="violet">from</span> <span class="amber">'idempotency-rehearsal'</span>;
+        <div class="section-intro narrow"><p class="kicker">Install</p><h2 id="install-title">Add the rehearsal to an integration test</h2><p>Use the package with synthetic IDs. The report records effect identity, not payload values.</p></div>
+        <div class="code-window" aria-label="Install command"><div class="code-title"><span>terminal</span><button type="button" data-copy="npm install --save-dev idempotency-rehearsal" aria-describedby="copy-status">Copy command</button></div><pre tabindex="0"><code>npm install --save-dev idempotency-rehearsal
 
-<span class="violet">const</span> report = <span class="violet">await</span> runScenario({
-  scenario: defineScenario({
-    name: <span class="amber">'duplicate after retry'</span>,
-    deliveries: [original, { ...duplicate, afterMs: <span class="cyan">250</span> }],
-    expect: [{ adapter: <span class="amber">'payment'</span>, action: <span class="amber">'capture'</span>, idempotencyKey: <span class="amber">'order_demo_042'</span>, count: <span class="cyan">1</span> }],
-  }),
-  handler: handleWebhook,
-});
-
-assertIdempotent(report); <span class="comment">// exits loudly on the second effect</span></code></pre>
-        </div>
+import { defineScenario, runScenario } from 'idempotency-rehearsal';</code></pre></div>
       </section>
-
-      <section class="section contract" id="contract" aria-labelledby="contract-title">
-        <div class="section-intro">
-          <p class="kicker">The safety contract</p>
-          <h2 id="contract-title">Production-shaped. Production-safe.</h2>
-          <p>The harness exercises timing and ordering without turning your test into a payment or email cannon.</p>
-        </div>
-        <div class="contract-grid">
-          <article><span class="pixel-icon" aria-hidden="true">▦</span><h3>Declare the bad timeline</h3><p>Duplicate IDs, delayed retries, and concurrent groups are readable data—not bespoke sleep-and-curl scripts.</p></article>
-          <article><span class="pixel-icon" aria-hidden="true">⊘</span><h3>Real side effects stay off</h3><p>Payment and email adapters record intent only. HTTP collection is loopback-only and test IDs are validated.</p></article>
-          <article><span class="pixel-icon" aria-hidden="true">✓</span><h3>Keep a durable proof</h3><p>Exact expectations and stable JSON output make the scenario a regression test your CI can keep.</p></article>
-        </div>
-      </section>
-
-      <section class="section cli" aria-labelledby="cli-title">
-        <div>
-          <p class="kicker">CLI mode</p>
-          <h2 id="cli-title">Aim it at localhost.</h2>
-          <p>The runner posts your declared sequence and opens a temporary loopback collector for test-only effect adapters.</p>
-        </div>
-        <div class="terminal">
-          <div><span>local</span><span>80×24</span></div>
-          <code><b>$</b> npx idempotency-rehearsal run duplicate.json \<br />&nbsp;&nbsp;&nbsp;&nbsp;--target http://127.0.0.1:3000/webhooks/orders<br /><br /><span class="green">PASS</span>&nbsp; delayed duplicate<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 deliveries · 1 effect · 264ms<br />&nbsp;&nbsp;<span class="green">✓</span> one logical effect per idempotency key</code>
-        </div>
-      </section>
-
-      <section class="final-cta" aria-labelledby="cta-title">
-        <div class="cta-pulse" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-        <div><p class="kicker">Before the next retry</p><h2 id="cta-title">Make the second delivery boring.</h2></div>
-        <button class="button primary" type="button" data-copy="npm i -D idempotency-rehearsal">Copy install command <span aria-hidden="true">⧉</span></button>
-      </section>
+      <section class="section limits" aria-labelledby="limits-title"><div class="section-intro narrow"><p class="kicker">Safety and limits</p><h2 id="limits-title">Use it for local tests, not delivery infrastructure</h2><p>It checks declared sequences. It does not run a webhook gateway, queue, or production event store.</p><p><a href="/privacy">Read the privacy notice</a> and <a href="/terms">terms of use</a>.</p></div></section>
     </main>
-
     <footer>
-      <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>idempotency/<b>rehearsal</b></span></div>
-      <p>Open source under MIT. Runs locally. Stores nothing. Sends no analytics.</p>
-      <div><a href="https://github.com/B-Divyesh/sf-idempotency-rehearsal">Source</a><a href="#privacy-note">Privacy</a><a href="#terms-note">Terms</a></div>
-      <small id="privacy-note">Privacy: this static site collects and stores no personal data.</small>
-      <small id="terms-note">Terms: provided as-is under the MIT license.</small>
+      <div><a class="brand" href="/" aria-label="Idempotency Rehearsal home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>idempotency/<b>rehearsal</b></span></a><p>Local checks for duplicate webhook effects.</p></div>
+      <div class="footer-links"><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://github.com/B-Divyesh/sf-idempotency-rehearsal" rel="noreferrer">Source (GitHub)</a></div><small>Built by Param Factory · v0.1.0</small>
     </footer>
-    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div>
-    <noscript><p class="noscript">JavaScript is only needed for the live rehearsal. Installation and API documentation remain available above.</p></noscript>
+    <div class="sr-only" id="copy-status" role="status" aria-live="polite"></div><div class="sr-only" id="route-announcement" aria-live="polite"></div>
   </body>
 </html>

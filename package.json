@@ -37,6 +37,11 @@
       "types": "./dist/package/index.d.ts",
       "import": "./dist/package/index.js",
       "require": "./dist/package/index.cjs"
+    },
+    "./browser": {
+      "types": "./dist/package/browser.d.ts",
+      "import": "./dist/package/browser.js",
+      "require": "./dist/package/browser.cjs"
     }
   },
   "bin": {
@@ -47,8 +52,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:a11y": "node scripts/a11y.mjs",
+    "test:claims": "node scripts/claims.mjs",
+    "test:consumer": "node scripts/consumer-check.mjs",
     "typecheck": "tsc --noEmit",
-    "build:package": "tsup src/index.ts src/cli.ts --format esm,cjs --dts --clean --out-dir dist/package --target node20 --sourcemap",
+    "build:package": "tsup src/index.ts src/browser.ts src/cli.ts --format esm,cjs --dts --clean --out-dir dist/package --target node20 --sourcemap",
     "build:site": "vite build --config site/vite.config.ts && npm run check:site-config",
     "build": "npm run typecheck && npm run build:package && npm run build:site",
     "check:site-config": "node scripts/check-static-config.mjs",

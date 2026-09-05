@@ -6,6 +6,21 @@
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
   },
+  "navigationFallback": {
+    "rewrite": "/404.html",
+    "exclude": [
+      "/assets/*",
+      "/favicon.svg",
+      "/robots.txt",
+      "/sitemap.xml",
+      "/sw.js"
+    ]
+  },
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html"
+    }
+  },
   "routes": [
     {
       "route": "/assets/*",
@@ -27,6 +42,24 @@
     },
     {
       "route": "/",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "route": "/demo",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "route": "/privacy",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
+    },
+    {
+      "route": "/terms",
       "headers": {
         "Cache-Control": "no-cache, no-store, must-revalidate"
       }
